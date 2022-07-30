@@ -3,40 +3,43 @@ import allure from '@wdio/allure-reporter';
 
 export default class Logger {
   constructor() {}
+  static stepNumber = 0
   static async step(
     options: stepOptions = { createStep: true, takeScreenshot: false },
     description: string,
     expected: string,
     actual: string,
     assertion: Function,
-  ): Promise<void> {
-    global.stepNumber ? global.stepNumber++ : (global.stepNumber = 1);
-    const stepNumber = global.stepNumber;
+    ): Promise<void> {
     if (options.createStep || options.takeScreenshot) {
       try {
-        const stepStart = `STEP ${stepNumber} STARTED\n\nDescription: ${description}\nExpected result: ${expected}\n`;
+        Logger.stepNumber++;
+        const stepStart = `STEP ${Logger.stepNumber} STARTED\n\nDescription: ${description}\nExpected result: ${expected}\n`;
+        const allureTestTitle = `Step ${Logger.stepNumber} ${description}\n${expected}\n${actual}`;
         console.log(stepStart);
         await assertion();
         if (options.takeScreenshot) {
           allure.addStep(
-            `Step ${stepNumber} ${description}\n${expected}`,
+            allureTestTitle,
             {
               content: await browser.saveScreenshot(
-                `./screenshots/step_${stepNumber}_test_name.png`,
+                `./screenshots/step_${Logger.stepNumber}_test_name.png`,
               ),
               type: 'image/png',
-              name: `Step ${stepNumber} screenshot`,
+              name: `Step ${Logger.stepNumber} screenshot`,
             },
             'passed',
           );
+        } else {
+          allure.addStep(allureTestTitle);
         }
-        console.log(`STEP ${stepNumber} PASSED. Actual result:\n\n${actual}\n`);
+        console.log(`STEP ${Logger.stepNumber} PASSED. Actual result:\n\n${actual}\n`);
       } catch (error) {
         await browser.saveScreenshot(
-          `./screenshots/step_${stepNumber}_failed.png`,
+          `./screenshots/step_${Logger.stepNumber}_failed.png`,
         ),
           console.error(
-            `STEP ${stepNumber} FAILED. Actual result:\n\n${actual}\n`,
+            `STEP ${Logger.stepNumber} FAILED. Actual result:\n\n${actual}\n`,
           );
         throw error;
       }
@@ -45,7 +48,7 @@ export default class Logger {
         await assertion();
       } catch (error) {
         await browser.saveScreenshot(
-          `./screenshots/step_${stepNumber}_failed.png`,
+          `./screenshots/step_${Logger.stepNumber}_failed.png`,
         );
         throw error;
       }

@@ -8,8 +8,8 @@ export default class AddElementsPageObject extends RootObject {
     super();
   }
 
-  open(): Promise<void> {
-    return super.open('add_remove_elements/');
+  async open(): Promise<void> {
+    return await super.open('add_remove_elements/');
   }
 
   async getAddElementButton(): Promise<WebdriverIO.Element> {

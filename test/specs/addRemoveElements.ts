@@ -11,6 +11,11 @@ describe('Add/Remove Elements test', function () {
       await addElementsPageObject.getAddElementButton(),
       {takeScreenshot: true}
     );
+    // createStep: false demo
+    await addElementsPageObject.verifyElementIsDisplayed(
+      await addElementsPageObject.getAddElementButton(),
+      {createStep: false}
+    );
     await addElementsPageObject.clickOnAddElementsButton({takeScreenshot: true});
     await addElementsPageObject.clickOnAddElementsButton({takeScreenshot: true});
     await addElementsPageObject.clickOnAddElementsButton({takeScreenshot: true});

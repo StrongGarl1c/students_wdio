@@ -17,6 +17,7 @@
         "wdio": "wdio run test/wdio.conf.ts"
     },
     "dependencies": {
+        "@types/chai": "^4.3.1",
         "allure-commandline": "^2.18.1",
         "axios": "^0.27.2",
         "chai": "^4.3.6"

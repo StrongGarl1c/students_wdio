@@ -1,4 +1,5 @@
 import type { Options } from '@wdio/types'
+// @ts-ignore
 import allure from 'allure-commandline'
 
 export const config: Options.Testrunner = {
@@ -165,7 +166,9 @@ export const config: Options.Testrunner = {
     reporters: ['spec', ['allure', {
         outputDir: 'allure-results',
         disableWebdriverStepsReporting: true,
-        addConsoleLogs: true
+        disableWebdriverScreenshotsReporting: true,
+        addConsoleLogs: true,
+        disableMochaHooks: false
     }]],
 
 
@@ -175,7 +178,7 @@ export const config: Options.Testrunner = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: 60000 * 10
     },
     //
     // =====
@@ -323,7 +326,7 @@ export const config: Options.Testrunner = {
                 () => reject(reportError),
                 5000)
 
-            generation.on('exit', function(exitCode) {
+            generation.on('exit', function(exitCode: number | unknown) {
                 clearTimeout(generationTimeout)
 
                 if (exitCode !== 0) {
